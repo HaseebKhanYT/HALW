@@ -15,7 +15,7 @@ def extract_textdescriptives(
     label_col="label",
     spacy_model="en_core_web_lg",
     batch_size=1000,
-    n_process=4,
+    n_process=8,
 ):
     """Extract the full textdescriptives feature set (~70 features per text)."""
     nlp = spacy.load(spacy_model)
@@ -23,7 +23,8 @@ def extract_textdescriptives(
 
     docs = list(
         tqdm(
-            nlp.pipe(df[text_col].astype(str), batch_size=batch_size, n_process=n_process),
+            nlp.pipe(df[text_col].astype(str),
+                     batch_size=batch_size, n_process=n_process),
             total=len(df),
             desc="Extracting features",
         )
