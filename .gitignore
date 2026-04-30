@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# Heavy artifacts live on Drive, not in the repo
+*.h5
+*.keras
+*.pkl
+
+.DS_Store
+.venv/
+.env
