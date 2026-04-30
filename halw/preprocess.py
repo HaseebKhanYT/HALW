@@ -6,8 +6,14 @@ from sklearn.preprocessing import StandardScaler
 
 
 def drop_sparse_columns(df, min_non_null_fraction=0.5):
-    """Drop columns whose non-null fraction is below the threshold."""
-    return df.dropna(thresh=int(min_non_null_fraction * len(df)), axis=1)
+    """Drop non-numeric columns and columns whose non-null fraction is below the threshold.
+
+    Non-numeric columns (e.g. a residual `text` column in a cached features CSV) can't be
+    fed to StandardScaler / Conv1D, so they are dropped here alongside sparse columns. The
+    label column is assumed numeric (0/1) and is preserved.
+    """
+    numeric = df.select_dtypes(include="number")
+    return numeric.dropna(thresh=int(min_non_null_fraction * len(numeric)), axis=1)
 
 
 def split(X, y, val_size=0.1, test_size=0.1, random_state=42):
