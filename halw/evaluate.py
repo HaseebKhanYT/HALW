@@ -15,6 +15,15 @@ from sklearn.metrics import (
 )
 
 METRIC_COLUMNS = ["accuracy", "precision", "recall", "f1", "roc_auc", "log_loss"]
+
+METRIC_LABELS = {
+    "accuracy": "Accuracy",
+    "precision": "Precision",
+    "recall": "Recall",
+    "f1": "F1",
+    "roc_auc": "ROC-AUC",
+    "log_loss": "Log Loss",
+}
 RESULTS_COLUMNS = [
     "timestamp",
     "notebook",
@@ -41,6 +50,28 @@ def evaluate(model, X_test, y_test, threshold=0.5):
         "log_loss": log_loss(y_test, y_pred_proba),
         "confusion_matrix": confusion_matrix(y_test, y_pred).tolist(),
     }
+
+
+def format_metrics(metrics, title="Evaluation Metrics"):
+    """Render metrics dict as an aligned text block with confusion matrix."""
+    width = 44
+    rule = "─" * width
+    lines = [rule, f" {title}", rule]
+
+    label_width = max(len(METRIC_LABELS[k]) for k in METRIC_COLUMNS if k in metrics)
+    for k in METRIC_COLUMNS:
+        if k in metrics:
+            lines.append(f" {METRIC_LABELS[k]:<{label_width}}   {metrics[k]:.4f}")
+
+    cm = metrics.get("confusion_matrix")
+    if cm is not None:
+        lines.append(rule)
+        lines.append(" Confusion Matrix")
+        lines.append(f" {'':<10}{'Pred 0':>10}{'Pred 1':>10}")
+        for i, row in enumerate(cm):
+            lines.append(f" {'Actual ' + str(i):<10}{row[0]:>10}{row[1]:>10}")
+    lines.append(rule)
+    return "\n".join(lines)
 
 
 def log_run(
