@@ -4,8 +4,8 @@ Each pipeline takes a DataFrame with `text` and `label` and returns a DataFrame
 of numeric features with `label` appended. The `text` column is dropped.
 """
 
-import spacy
-import textdescriptives as td
+import spacy  # type: ignore
+import textdescriptives as td  # type: ignore
 from tqdm import tqdm
 
 
@@ -15,7 +15,7 @@ def extract_textdescriptives(
     label_col="label",
     spacy_model="en_core_web_lg",
     batch_size=1000,
-    n_process=8,
+    n_process=4,
 ):
     """Extract the full textdescriptives feature set (~70 features per text)."""
     nlp = spacy.load(spacy_model)
